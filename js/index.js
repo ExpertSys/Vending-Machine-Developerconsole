@@ -1,13 +1,12 @@
 function VendingMachine(){
     console.log(this.boot = `Welcome to Vender Deluxe !`);
-    this.loanAmount = 0; /* Loan amount is actually assigned at bottom of code */
-    this.funds = 10; /* You're starting balance */
-    this.useLoan = false; /* If this is set to true. Purchases will be deducted from your Loan rather than your balance*/
-    this.maintenance = false; /* When set to true, this will cause a maintenance screen to appear */
-    this.mathVisual = true; /* When this is set to true, a visual example of each purchase will be presented. */
+    this.loanAmount = 0; 
+    this.funds = 10; 
+    this.useLoan = false; 
+    this.maintenance = false; 
+    this.mathVisual = true;
 }
 
-/* List of items available in our vending machine */
 let options = [
       {
           "coke": {
@@ -97,13 +96,11 @@ let options = [
     }
 ];
 
-/* Function to store variables related to the user */
 VendingMachine.prototype.user = function(){
     console.log(`Money: $${this.funds}`);
     this.loanInfo();
 }
 
-/* Information about ongoing loans are displayed with this func */
 VendingMachine.prototype.loanInfo = function(){
     if(this.loanAmount <= 0){
         console.log(`Loan Status: %cNo Pending Loan.\n`,`color:green`);
@@ -117,53 +114,39 @@ VendingMachine.prototype.loanInfo = function(){
     }
 }
 
-/* Distributes the loan amount to your loan balance */
 VendingMachine.prototype.takeLoan = function(amount){
     this.loanAmount = amount;
 }
 
-/* Oh boy, here goes a lot of explanation */
 VendingMachine.prototype.makePurchase = function(code,price){
-    /* Checks if the machine is under maintenance before allowing purchases */
     if(this.maintenance){
         return true;
     } else{
-      /* Friendly messages to warn the user about important events */
       let successMsg = 'color:green;font-weight:bold;',
           errorMsg = 'color:red;font-weight:bold;';
-
-      /* We begin looping through our options menu */
+        
       for(let y = 0; y < options.length; y++){
           let obj = options[y];
-          /* After reaching our destination, we loop further down the object tree */
+      
           for(let item in obj){
               if(obj.hasOwnProperty(item)){
-                  let getCode = obj[item];
-                  /* We validate wether the code entered is equivalent to an item in our system */
+                  let getCode = obj[item];          
                   if(getCode.productCode == code){
-                      /* Once the item is confirmed, we check if our person has funds */
                       if(this.funds){
-                          /* Checking if the funds is either the minimum amount required or greater */
                           if(this.funds>=getCode.productPrice){
                               console.log(`\n%cYou purchased a ${getCode.productName} for $${getCode.productPrice}`,`${successMsg}`);
                               console.log(`Current Balance: $${this.funds}`);
                               console.log(`Item Price: $${getCode.productPrice}`);
                               console.log(`Calculation: ${this.funds} - ${getCode.productPrice} =`, (this.funds - getCode.productPrice));
 
-                              /* We create a simple math visualization to articulate the calculations occuring */
                               if(this.mathVisual){
-                                /* Balance = funds & cost = itemCost */
                                 function visualization(balance,cost){
                                     let drawing;
                                     let fullCost;
-                                    /* This line will draw out the appropriate amount of lines in correlation with our numbers */
                                     let lines = 7;
                                     let finalSum;
                                     let sym;
-
-                                    /* We loop through each of the balances.
-                                       Sure this could be omitted but I have a
-                                       reason for using loops */
+                                    
                                     for(var j = 0; j<balance+1; j++){
                                         drawing = j;
                                         for(var y = 0; y<Math.round(getCode.productPrice+1); y++){
@@ -172,15 +155,12 @@ VendingMachine.prototype.makePurchase = function(code,price){
                                         for(var x = 0; x < lines - 1; x++){
                                             let symbol = "-".repeat(lines);
                                             sym = symbol;
-                                            /* Because we are nested within an array, we can print out the
-                                            minimum amount of empty spaces required in order to draw out
-                                            our board appropriately | Spaces = Indentation for our values */
                                             drawing = " "+drawing;
                                             fullCost = " "+fullCost;
                                             finalSum = " "+drawing-fullCost;
                                         }
                                     }
-                                    /* Messy looking outputs for our information. Cant use classes in console.log (or can you) */
+                                   
                                     console.log(`\n%cFormula Visualization`,`padding:0.2%;color:blue;font-size:14px;font-size:bold;text-decoration:underline;`);
                                     console.log(`%c${drawing}\n-\n${fullCost}\n${sym}\n${finalSum}\n\n`,`font-style:italic;;color:blue;font-size:14px;`);
                                 }
@@ -192,14 +172,12 @@ VendingMachine.prototype.makePurchase = function(code,price){
                                 console.log(`-------------------------------------`);
                                 let sum = (this.funds - getCode.productPrice);
                               }
-                          }
-                          /* If our user is indeed broke, you will be told */
+                          }                       
                           if(this.funds==0){
                               console.log(`%cYou do not have money to purchase a ${getCode.productName} for $${getCode.productPrice}`,`${errorMsg}`);
                               console.log(`Current Balance: $${this.funds}`);
                               console.log(`Item Cost: $${getCode.productPrice}`);
-                          }
-                        /* If the user has a loan amount available, you are able to use it to make purchases granted the arguments above reflect such*/
+                          }                       
                       } else if(this.loanAmount>0){
                           console.log(`%cYou purchased a ${getCode.productName} with your loan balance.`,`${successMsg}`);
                           let loanSum = (this.loanAmount - getCode.productPrice);
@@ -216,7 +194,6 @@ VendingMachine.prototype.makePurchase = function(code,price){
     }
 }
 
-/* Puts the machine in maintenance mode */
 VendingMachine.prototype.outOfOrder = function(msg){
     let getStatus = this.maintenance;
     if(this.maintenance){
@@ -227,11 +204,9 @@ VendingMachine.prototype.outOfOrder = function(msg){
     }
 }
 
-/* We can search for items using the productCode */
 VendingMachine.prototype.search = function(arr,code){
     let newItem = [];
 
-    /* Same old same old, loops, and what not */
     for(let x = 0; x < arr.length; x++){
         let myObj = arr[x];
         for(var key in myObj){
@@ -244,15 +219,12 @@ VendingMachine.prototype.search = function(arr,code){
         }
     }
 
-    /* We use the array.filter function to retrieve information */
     let gett = newItem.filter(function(item){
-        // newItem = item.productName; /* Grab specific item Name */
         newItem = item;
         console.log(`\nInformation For Product Code: %c${code}`, `color:green;font-weight:bold;text-transform:uppercase;`, `${JSON.stringify(newItem, undefined, 2)}`);
     });
 }
 
-/* This is used for searching for items by their category */
 VendingMachine.prototype.byCategory = function(arr,val){
     let catInfo = [];
 
@@ -269,13 +241,11 @@ VendingMachine.prototype.byCategory = function(arr,val){
     }
 }
 
-/* We initialize a new vending machine ! */
 let vender = new VendingMachine();
-vender.outOfOrder(); //This stays uncommented because it is checking if this.maintenace variable is set to true/falsee
-vender.takeLoan(50); //You can specify the amount of money to give yourself. How nice.
-vender.user(); //Print out our users information
-// VendingMachine.getItem("Chips");
+vender.outOfOrder();
+vender.takeLoan(50); 
+vender.user(); 
 
-let searchByCode = vender.search(options,"a100"); //The second parameter takes in the productCode
-let searchByCat = vender.byCategory(options,"chips"); //The second parameter takes in the productCategory
-vender.makePurchase("a100"); //Make purchases of anything by simply using the productCode
+let searchByCode = vender.search(options,"a100");
+let searchByCat = vender.byCategory(options,"chips"); 
+vender.makePurchase("a100"); 
