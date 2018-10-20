@@ -1,9 +1,8 @@
 function VendingMachine(){
-    console.log(this.boot = `Welcome to Vender Deluxe !`);
-    this.loanAmount = 0; 
-    this.funds = 10; 
-    this.useLoan = false; 
-    this.maintenance = false; 
+    this.loanAmount = 0;
+    this.funds = 10;
+    this.useLoan = false;
+    this.maintenance = false;
     this.mathVisual = true;
 }
 
@@ -103,7 +102,7 @@ VendingMachine.prototype.user = function(){
 
 VendingMachine.prototype.loanInfo = function(){
     if(this.loanAmount <= 0){
-        console.log(`Loan Status: %cNo Pending Loan.\n`,`color:green`);
+        console.log(`Loan Status: %cNo Pending Loan.`,`color:green`);
     }else{
         if(this.useLoan==true){
             this.funds = this.loanAmount;
@@ -122,23 +121,22 @@ VendingMachine.prototype.makePurchase = function(code,price){
     if(this.maintenance){
         return true;
     } else{
+
       let successMsg = 'color:green;font-weight:bold;',
           errorMsg = 'color:red;font-weight:bold;';
-        
+
       for(let y = 0; y < options.length; y++){
           let obj = options[y];
-      
           for(let item in obj){
               if(obj.hasOwnProperty(item)){
-                  let getCode = obj[item];          
-                  if(getCode.productCode == code){
+                  let getCode = obj[item];
+                  if(getCode.productCode == code && getCode.productPrice == price){
                       if(this.funds){
                           if(this.funds>=getCode.productPrice){
                               console.log(`\n%cYou purchased a ${getCode.productName} for $${getCode.productPrice}`,`${successMsg}`);
                               console.log(`Current Balance: $${this.funds}`);
                               console.log(`Item Price: $${getCode.productPrice}`);
                               console.log(`Calculation: ${this.funds} - ${getCode.productPrice} =`, (this.funds - getCode.productPrice));
-
                               if(this.mathVisual){
                                 function visualization(balance,cost){
                                     let drawing;
@@ -146,7 +144,6 @@ VendingMachine.prototype.makePurchase = function(code,price){
                                     let lines = 7;
                                     let finalSum;
                                     let sym;
-                                    
                                     for(var j = 0; j<balance+1; j++){
                                         drawing = j;
                                         for(var y = 0; y<Math.round(getCode.productPrice+1); y++){
@@ -160,29 +157,28 @@ VendingMachine.prototype.makePurchase = function(code,price){
                                             finalSum = " "+drawing-fullCost;
                                         }
                                     }
-                                   
                                     console.log(`\n%cFormula Visualization`,`padding:0.2%;color:blue;font-size:14px;font-size:bold;text-decoration:underline;`);
                                     console.log(`%c${drawing}\n-\n${fullCost}\n${sym}\n${finalSum}\n\n`,`font-style:italic;;color:blue;font-size:14px;`);
                                 }
                                 visualization(this.funds);
-                                console.log(`New Balance: $${this.funds -= getCode.productPrice} ~ `, `Rounded: ${Math.round((this.funds -= getCode.productPrice % getCode.productPrice))}`);
+                                console.log(`New Balance: $${this.funds - getCode.productPrice} ~ `, `Rounded: ${Math.round(this.funds -= getCode.productPrice)}`);
                               }
                               else{
-                                console.log(`New Balance: $${this.funds -= getCode.productPrice} ~ `, `Rounded: ${Math.round((this.funds -= getCode.productPrice % getCode.productPrice))}`);
+                                console.log(`New Balance: $${this.funds - getCode.productPrice} ~ `, `Rounded: ${Math.round(this.funds -= getCode.productPrice)}`);
                                 console.log(`-------------------------------------`);
                                 let sum = (this.funds - getCode.productPrice);
                               }
-                          }                       
+                          }
                           if(this.funds==0){
                               console.log(`%cYou do not have money to purchase a ${getCode.productName} for $${getCode.productPrice}`,`${errorMsg}`);
                               console.log(`Current Balance: $${this.funds}`);
                               console.log(`Item Cost: $${getCode.productPrice}`);
-                          }                       
+                          }
                       } else if(this.loanAmount>0){
                           console.log(`%cYou purchased a ${getCode.productName} with your loan balance.`,`${successMsg}`);
                           let loanSum = (this.loanAmount - getCode.productPrice);
                           console.log(`%cYou now owe the bank $${loanSum}`,`${errorMsg}`);
-                          this.loanAmount -= getCode.productPrice;
+                          this.loanAmount - getCode.productPrice;
                           console.log(`${this.loanAmount}`);
                       }
                   }
@@ -195,20 +191,21 @@ VendingMachine.prototype.makePurchase = function(code,price){
 }
 
 VendingMachine.prototype.outOfOrder = function(msg){
-    let getStatus = this.maintenance;
     if(this.maintenance){
-        msg = message = "\nThis vending machine is currently down for maintenance";
-        console.log(msg);
+        console.log(``);
+        msg = message = `This vending machine is currently down for maintenance`;
+        console.log(`%c ${msg} !`,`color:red;font-size:18px;border:1px solid red;padding:1% 5% 1% 1%;font-family:Calibri;border-style:dotted;`);
+        console.log(``);
     } else{
         return true;
     }
 }
 
-VendingMachine.prototype.search = function(arr,code){
+VendingMachine.prototype.search = function(code){
     let newItem = [];
 
-    for(let x = 0; x < arr.length; x++){
-        let myObj = arr[x];
+    for(let x = 0; x < options.length; x++){
+        let myObj = options[x];
         for(var key in myObj){
             if(typeof Object){
                 let item = myObj[key];
@@ -221,20 +218,19 @@ VendingMachine.prototype.search = function(arr,code){
 
     let gett = newItem.filter(function(item){
         newItem = item;
-        console.log(`\nInformation For Product Code: %c${code}`, `color:green;font-weight:bold;text-transform:uppercase;`, `${JSON.stringify(newItem, undefined, 2)}`);
+        console.log(`\nInformation For Product By Code: %c${code}`, `color:green;font-weight:bold;text-transform:uppercase;`, `${JSON.stringify(newItem, undefined, 2)}`);
     });
 }
 
-VendingMachine.prototype.byCategory = function(arr,val){
+VendingMachine.prototype.byCategory = function(category){
     let catInfo = [];
-
-    for(let x = 0; x < arr.length; x++){
-        let obj = arr[x];
+    for(let x = 0; x < options.length; x++){
+        let obj = options[x];
         for(let key in obj){
             let item = obj[key];
             if(item.hasOwnProperty("category")){
-                if(item.category==val){
-                    console.log(item);
+                if(item.category==category){
+                    console.log(`\nInformation For Product By Category: %c${category}`, `color:green;font-weight:bold;text-transform:uppercase;`, `${JSON.stringify(item, undefined, 2)}`);
                 }
             }
         }
@@ -243,9 +239,10 @@ VendingMachine.prototype.byCategory = function(arr,val){
 
 let vender = new VendingMachine();
 vender.outOfOrder();
-vender.takeLoan(50); 
-vender.user(); 
+vender.user();
+vender.takeLoan(52);
 
-let searchByCode = vender.search(options,"a100");
-let searchByCat = vender.byCategory(options,"chips"); 
-vender.makePurchase("a100"); 
+let searchByCode = vender.search("a100");
+let searchByCat = vender.byCategory("chocolate");
+vender.makePurchase("a100", 2.55); 
+vender.makePurchase("a101", 1.25);
