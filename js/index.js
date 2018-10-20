@@ -121,10 +121,8 @@ VendingMachine.prototype.makePurchase = function(code,price){
     if(this.maintenance){
         return true;
     } else{
-
       let successMsg = 'color:green;font-weight:bold;',
           errorMsg = 'color:red;font-weight:bold;';
-
       for(let y = 0; y < options.length; y++){
           let obj = options[y];
           for(let item in obj){
@@ -203,7 +201,6 @@ VendingMachine.prototype.outOfOrder = function(msg){
 
 VendingMachine.prototype.search = function(code){
     let newItem = [];
-
     for(let x = 0; x < options.length; x++){
         let myObj = options[x];
         for(var key in myObj){
