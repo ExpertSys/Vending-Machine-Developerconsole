@@ -123,17 +123,14 @@ VendingMachine.prototype.takeLoan = function(amount){
 }
 
 VendingMachine.prototype.makePurchase = function(code,price){
-
     if(this.maintenance){
         return true;
     } else{
-
       let successMsg = 'color:green;font-weight:bold;',
           errorMsg = 'color:red;font-weight:bold;';
-
+        
       for(let y = 0; y < options.length; y++){
           let obj = options[y];
-
           for(let item in obj){
               if(obj.hasOwnProperty(item)){
                   let getCode = obj[item];
@@ -146,14 +143,13 @@ VendingMachine.prototype.makePurchase = function(code,price){
                               console.log(`Calculation: ${this.funds} - ${getCode.productPrice} =`, (this.funds - getCode.productPrice));
 
                               if(this.mathVisual){
-
                                 function visualization(balance,cost){
                                     let drawing;
                                     let fullCost;
                                     let lines = 7;
                                     let finalSum;
                                     let sym;
-
+                                    
                                     for(var j = 0; j<balance+1; j++){
                                         drawing = j;
                                         for(var y = 0; y<Math.round(getCode.productPrice+1); y++){
